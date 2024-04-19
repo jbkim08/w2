@@ -19,6 +19,7 @@
     <form action="/login" method="post">
         <input type="text" name="mid" placeholder="아이디">
         <input type="text" name="mpw" placeholder="비번">
+        <input type="checkbox" name="auto" >로그인유지
         <button type="submit">로그인</button>
     </form>
 </body>

@@ -31,4 +31,34 @@ public class MemberDAO {
 
         return memberVO;
     }
+
+    //자동로그인 체크했을때 uuid 를 업데이트 함
+    public void updateUuid(String mid, String uuid) throws Exception {
+        String sql = "UPDATE tbl_member SET uuid = ? WHERE mid = ?";
+        @Cleanup Connection connection = ConnectionUtil.INSTANCE.getConnection();
+        @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, uuid);
+        preparedStatement.setString(2, mid);
+        preparedStatement.executeUpdate();
+    }
+
+    //uuid 값으로 사용자 정보를 가져옴
+    public MemberVO selectUUID(String uuid) throws Exception {
+        String query = "SELECT * FROM tbl_member WHERE uuid = ?";
+
+        @Cleanup Connection connection = ConnectionUtil.INSTANCE.getConnection();
+        @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setString(1, uuid);
+        @Cleanup ResultSet resultSet = preparedStatement.executeQuery();
+        resultSet.next();
+
+        MemberVO memberVO = MemberVO.builder()
+                .mid(resultSet.getString(1))
+                .mpw(resultSet.getString(2))
+                .mname(resultSet.getString(3))
+                .uuid(resultSet.getString(4))
+                .build();
+
+        return memberVO;
+    }
 }

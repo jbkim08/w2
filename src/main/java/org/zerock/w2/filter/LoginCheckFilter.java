@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -21,11 +22,31 @@ public class LoginCheckFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
 
         HttpSession session = req.getSession();
-        if(session.getAttribute("loginInfo") == null) {
-            resp.sendRedirect("/login");
+        //세션에 로그인정보 있으면 통과
+        if(session.getAttribute("loginInfo") != null) {
+            filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
+        //세션은 없지만 쿠키를 체크해봄
+        Cookie cookie = findCookie(req.getCookies(), "remember-me");
+
+
 
         filterChain.doFilter(servletRequest, servletResponse);
     }
+
+    private Cookie findCookie(Cookie[] cookies, String cookieName) {
+        //쿠키는 배열이다. 쿠키이름으로 배열안에 쿠키를 찾아서 리턴한다.
+        Cookie targetCookie = null;
+        if (cookies != null && cookies.length > 0) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(cookieName)) {
+                    targetCookie = cookie;
+                    break;
+                }
+            }
+        }
+        return targetCookie;
+    }
+
 }
