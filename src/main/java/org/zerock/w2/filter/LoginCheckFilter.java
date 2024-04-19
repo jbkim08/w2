@@ -1,6 +1,8 @@
 package org.zerock.w2.filter;
 
 import lombok.extern.log4j.Log4j2;
+import org.zerock.w2.dto.MemberDTO;
+import org.zerock.w2.service.MemberService;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -30,9 +32,29 @@ public class LoginCheckFilter implements Filter {
         //세션은 없지만 쿠키를 체크해봄
         Cookie cookie = findCookie(req.getCookies(), "remember-me");
 
+        //세션도 없고 쿠키도 없으면 그냥 로그인
+        if(cookie == null) {
+            resp.sendRedirect( "/login");
+            return;
+        }
+        //쿠키가 있으면
+        log.info("쿠키가 있음....");
+        String uuid = cookie.getValue();
 
+        try {
+            MemberDTO memberDTO = MemberService.INSTANCE.getByUUID(uuid);
+            log.info("사용자 정보: " + memberDTO);
+            if(memberDTO == null) {
+                throw new Exception("Cookie value in not valid");
+            }
+            //회원 정보를 세션에 추가
+            session.setAttribute("loginInfo", memberDTO);
+            filterChain.doFilter(servletRequest, servletResponse);
 
-        filterChain.doFilter(servletRequest, servletResponse);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            resp.sendRedirect( "/login");
+        }
     }
 
     private Cookie findCookie(Cookie[] cookies, String cookieName) {
