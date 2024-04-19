@@ -14,6 +14,8 @@
 <body>
 <ul>
     <h1>Todo List</h1>
+    <h2>${loginInfo}</h2>
+    <h3>${loginInfo.mname}</h3>
 <%-- 컨트롤러에서 dtolist를 보내줌   --%>
     <c:forEach items="${dtoList}" var="dto">
         <li>
