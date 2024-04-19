@@ -24,5 +24,9 @@
         </li>
     </c:forEach>
 </ul>
+<%--로그아웃--%>
+<form action="/logout" method="post">
+    <button type="submit">로그아웃</button>
+</form>
 </body>
 </html>

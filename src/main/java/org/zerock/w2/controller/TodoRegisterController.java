@@ -25,18 +25,18 @@ public class TodoRegisterController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         log.info("/todo/register GET....");
 
-        HttpSession session = req.getSession();
-        if(session.isNew()){
-            log.info("New session....새로운 사용자");
-            resp.sendRedirect("/login");
-            return; //새로운 사용자이므로 등록할수 없고 로그인 페이지로
-        }
-        //새로운 사용자는 아니지만 로그인하지 않은 유저
-        if(session.getAttribute("loginInfo") == null){
-            log.info("로그인 하지 않은 유저....");
-            resp.sendRedirect("/login");
-            return;
-        }
+//        HttpSession session = req.getSession();
+//        if(session.isNew()){
+//            log.info("New session....새로운 사용자");
+//            resp.sendRedirect("/login");
+//            return; //새로운 사용자이므로 등록할수 없고 로그인 페이지로
+//        }
+//        //새로운 사용자는 아니지만 로그인하지 않은 유저
+//        if(session.getAttribute("loginInfo") == null){
+//            log.info("로그인 하지 않은 유저....");
+//            resp.sendRedirect("/login");
+//            return;
+//        }
 
         req.getRequestDispatcher("/WEB-INF/todo/register.jsp").forward(req, resp);
     }
