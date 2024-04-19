@@ -36,11 +36,11 @@ public class TodoReadController extends HttpServlet {
             log.info("exist: " + exist);
 
             if(!exist) {
-                todoListStr += tno+"-"; //쿠키에 번호를 추가한다.
-                viewTodoCookie.setValue(todoListStr);
+                todoListStr += tno+"-"; //쿠키문자열에 번호를 추가한다.
+                viewTodoCookie.setValue(todoListStr); //쿠키 새로 저장(업데이트)
                 viewTodoCookie.setMaxAge(60*60*24); // 60초*60(시간)*24(하루)
                 viewTodoCookie.setPath("/");
-                resp.addCookie(viewTodoCookie);
+                resp.addCookie(viewTodoCookie); //브라우저에 쿠키 저장
             }
 
             req.getRequestDispatcher("/WEB-INF/todo/read.jsp").forward(req, resp);
